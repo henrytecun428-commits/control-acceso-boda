@@ -1,31 +1,130 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './supabase-config.js';
-const supabase=createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
-const authPanel=document.querySelector('#auth-panel'),adminPanel=document.querySelector('#admin-panel'),logout=document.querySelector('#logout'),authMessage=document.querySelector('#auth-message'),formMessage=document.querySelector('#form-message'),settingsMessage=document.querySelector('#settings-message'),listMessage=document.querySelector('#list-message'),body=document.querySelector('#invitations-body'),createdBox=document.querySelector('#created-box');
-const clean=v=>String(v??'').replace(/[&<>\'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[c]));
-const copyDefs=[
- ['hero_eyebrow','Portada · pequeño texto','UNA INVITACIÓN ESPECIAL','text'],['welcome_eyebrow','Bienvenida · pequeño texto','QUEREMOS COMPARTIRLO CONTIGO','text'],['welcome_title','Bienvenida · título','Hay días que merecen celebrarse para siempre.','text'],
- ['story_eyebrow','Historia · pequeño texto','NUESTRA HISTORIA','text'],['story_title','Historia · título','Un capítulo nuevo está a punto de comenzar.','text'],['story_text','Historia · texto','Entre miradas, conversaciones, risas y recuerdos, llegamos hasta aquí. Ahora queremos celebrar lo que viene, rodeados de las personas que hacen especial nuestra historia.','textarea'],['story_signature','Historia · firma','con amor, siempre ✦','text'],
- ['event_eyebrow','Evento · pequeño texto','EL GRAN DÍA','text'],['event_title','Evento · título','Este es el momento.','text'],['event_intro','Evento · introducción','Queremos que llegues sin prisas y vivas cada instante con nosotros.','textarea'],['reception_title','Recepción · título','Recepción','text'],['reception_description','Recepción · descripción','Te recibiremos con alegría para comenzar juntos esta celebración.','textarea'],['ceremony_title','Ceremonia · título','Ceremonia','text'],['ceremony_description','Ceremonia · descripción','El instante que dará inicio oficialmente a nuestro nuevo capítulo.','textarea'],['dress_eyebrow','Vestimenta · pequeño texto','VESTIMENTA','text'],['dress_description','Vestimenta · descripción','Queremos verte cómodo, elegante y listo para celebrar.','textarea'],
- ['gallery_eyebrow','Galería · pequeño texto','MOMENTOS','text'],['gallery_title','Galería · título','Recuerdos que nos acompañan.','text'],['gallery_description','Galería · descripción','Un espacio para las imágenes que cuentan nuestra historia.','textarea'],
- ['location_eyebrow','Ubicación · pequeño texto','NOS VEMOS AQUÍ','text'],['details_arrival_title','Detalle llegada · título','Planea con tiempo','text'],['details_arrival_description','Detalle llegada · texto','Te recomendamos salir con anticipación para disfrutar el día sin prisas.','textarea'],['details_dress_title','Detalle vestimenta · título','Elegante','text'],['details_dress_description','Detalle vestimenta · texto','Queremos que te sientas cómodo y espectacular para celebrar.','textarea'],['details_gifts_title','Detalle regalos · título','Gracias por el cariño','text'],['details_gifts_description','Detalle regalos · texto','Tu presencia es nuestro mejor regalo. Si deseas acompañarnos con un detalle, aquí encontrarás la información.','textarea'],
- ['gift_eyebrow','Regalos · pequeño texto','UN PEQUEÑO DETALLE','text'],['gift_title','Regalos · título','Regalos','text'],['faq_eyebrow','FAQ · pequeño texto','PREGUNTAS FRECUENTES','text'],['faq_title','FAQ · título','Todo lo que necesitas saber','text'],['faq_q1','Pregunta 1','¿Hay parqueo disponible?','text'],['faq_a1','Respuesta 1','Sí. Consulta la sección de ubicación para ver los detalles.','textarea'],['faq_q2','Pregunta 2','¿Puedo llevar niños?','text'],['faq_a2','Respuesta 2','La información de tu invitación es personalizada.','textarea'],['faq_q3','Pregunta 3','¿Dónde puedo ver el código de acceso?','text'],['faq_a3','Respuesta 3','Al final de esta invitación encontrarás tu código y QR. Guárdalos para el día de la boda.','textarea'],
- ['rsvp_eyebrow','Confirmación · pequeño texto','TU LUGAR ESTÁ RESERVADO','text'],['rsvp_prompt','Confirmación · pregunta','¿Cuántas personas nos acompañarán?','text'],['rsvp_confirm_label','Confirmación · botón','Sí, estaremos ahí','text'],['rsvp_decline_label','Confirmación · rechazo','Esta vez no podremos acompañarlos','text'],['access_eyebrow','Pase · pequeño texto','TU PASE DIGITAL','text'],['access_title','Pase · título','Listo. Este es tu acceso.','text'],['access_description','Pase · texto','Guarda esta pantalla. Tu código y tu QR están vinculados a esta invitación y se usarán al llegar.','textarea'],['final_eyebrow','Final · pequeño texto','GRACIAS POR SER PARTE','text'],['final_title','Final · título','Nos vemos para celebrar.','text'],['final_description','Final · texto','Tu presencia hará que este recuerdo sea todavía más especial.','textarea']
-];
-const imageDefs=[['hero_image_url','Foto de portada','hero-image-url'],['gallery_image_1_url','Foto de galería 1','gallery-image-1'],['gallery_image_2_url','Foto de galería 2','gallery-image-2'],['gallery_image_3_url','Foto de galería 3','gallery-image-3'],['gallery_image_4_url','Foto de galería 4','gallery-image-4']];
-function ensureCopyEditor(){let box=document.querySelector('#copy-editor');if(box)return;const host=document.querySelector('#admin-panel .panel:nth-of-type(2)');if(!host)return;box=document.createElement('div');box.id='copy-editor';box.className='panel copy-editor-panel';box.innerHTML=`<h2>Textos de la invitación</h2><p class="notice">Aquí puedes cambiar todos los textos visibles de la invitación sin tocar código. Deja un campo vacío para usar el texto elegante predeterminado.</p><div class="copy-grid">${copyDefs.map(([key,label,placeholder,type])=>`<div class="field ${type==='textarea'?'full':''}"><label for="copy-${key}">${clean(label)}</label>${type==='textarea'?`<textarea id="copy-${key}" rows="3" placeholder="${clean(placeholder)}"></textarea>`:`<input id="copy-${key}" type="text" placeholder="${clean(placeholder)}">`}</div>`).join('')}</div><div style="margin-top:14px"><button id="save-copy" type="button">Guardar textos</button></div><p id="copy-message" class="notice"></p>`;host.insertAdjacentElement('afterend',box);document.querySelector('#save-copy').addEventListener('click',saveCopy)}
-function ensureImageUploaders(){imageDefs.forEach(([key,label,fieldId])=>{const field=document.querySelector(`#${fieldId}`);if(!field||field.parentElement.querySelector('.image-uploader'))return;const wrap=document.createElement('div');wrap.className='image-uploader';wrap.innerHTML=`<label class="upload-button"><input type="file" accept="image/jpeg,image/png,image/webp">Elegir foto</label><span class="upload-state">También puedes pegar una URL.</span><div class="admin-photo-preview"></div>`;field.parentElement.appendChild(wrap);const input=wrap.querySelector('input'),state=wrap.querySelector('.upload-state'),preview=wrap.querySelector('.admin-photo-preview');input.addEventListener('change',async()=>{const file=input.files?.[0];if(!file)return;if(!file.type.startsWith('image/')){state.textContent='Solo imágenes.';input.value='';return}if(file.size>8*1024*1024){state.textContent='Máximo 8 MB. La app la comprimirá antes de subirla.';input.value='';return}preview.innerHTML=`<img src="${URL.createObjectURL(file)}" alt="Vista previa">`;state.textContent='Preparando…';try{const blob=await compressImage(file);const path=`wedding/site/${fieldId}-${crypto.randomUUID()}.webp`;const{error}=await supabase.storage.from('wedding-media').upload(path,blob,{contentType:'image/webp',cacheControl:'31536000',upsert:false});if(error)throw error;const{data}=supabase.storage.from('wedding-media').getPublicUrl(path);field.value=data.publicUrl;state.textContent='Foto lista ✓'}catch(e){state.textContent=e?.message||'No se pudo subir la foto.'}})})}
-async function compressImage(file){const url=URL.createObjectURL(file);try{const img=await new Promise((resolve,reject)=>{const i=new Image();i.onload=()=>resolve(i);i.onerror=()=>reject(new Error('No se pudo leer la imagen.'));i.src=url});const max=2200,scale=Math.min(1,max/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=Math.max(1,Math.round(img.width*scale));c.height=Math.max(1,Math.round(img.height*scale));const ctx=c.getContext('2d',{alpha:false});ctx.drawImage(img,0,0,c.width,c.height);return await new Promise((resolve,reject)=>c.toBlob(b=>b?resolve(b):reject(new Error('No se pudo comprimir la imagen.')),'image/webp',.84))}finally{URL.revokeObjectURL(url)}}
-async function isAdmin(){const{data:{user}}=await supabase.auth.getUser();if(!user)return false;const{data,error}=await supabase.rpc('is_admin');return!error&&data===true}
-function invitationUrl(code){return `${window.location.origin}${window.location.pathname.replace(/\/admin\.html$/,'/')}invitacion.html?code=${encodeURIComponent(code)}`}
-async function loadInvitations(){listMessage.textContent='Cargando…';const{data,error}=await supabase.rpc('admin_invitation_summary');if(error){listMessage.textContent=error.message;return}let totalCupos=0,totalConfirmados=0,totalIngresaron=0;body.innerHTML=(data||[]).map(inv=>{totalCupos+=Number(inv.total_guests||0);totalConfirmados+=Number(inv.confirmed_guests||0);totalIngresaron+=Number(inv.used_guests||0);const url=invitationUrl(inv.code),msg=encodeURIComponent(`Hola ${inv.name} 💕 Aquí tienes tu invitación: ${url}`);return `<tr><td><strong>${clean(inv.name)}</strong></td><td><span class="pill">${clean(inv.code)}</span></td><td>${inv.total_guests}</td><td>${inv.confirmed_guests||0}</td><td>${inv.used_guests||0}</td><td>${inv.available_guests||0}</td><td>${clean(inv.rsvp_status)}</td><td><span class="status ${inv.active?'status-on':'status-off'}">${inv.active?'Activa':'Bloqueada'}</span></td><td><div class="actions"><button class="small-btn secondary" data-action="copy" data-url="${clean(url)}" type="button">Copiar enlace</button><a class="small-btn secondary" href="${clean(url)}" target="_blank" rel="noopener">Ver</a><a class="small-btn" href="https://wa.me/?text=${msg}" target="_blank" rel="noopener">WhatsApp</a><button class="small-btn secondary" data-action="toggle" data-id="${inv.id}" data-active="${inv.active}" type="button">${inv.active?'Bloquear':'Activar'}</button></div></td></tr>`}).join('');document.querySelector('#summary-invitations').textContent=(data||[]).length;document.querySelector('#summary-cupos').textContent=totalCupos;document.querySelector('#summary-confirmados').textContent=totalConfirmados;document.querySelector('#summary-ingresaron').textContent=totalIngresaron;body.querySelectorAll('[data-action="toggle"]').forEach(b=>b.addEventListener('click',()=>toggleInvitation(b.dataset.id,b.dataset.active==='true')));body.querySelectorAll('[data-action="copy"]').forEach(b=>b.addEventListener('click',async()=>{await navigator.clipboard.writeText(b.dataset.url);b.textContent='Copiado';setTimeout(()=>b.textContent='Copiar enlace',1200)}));listMessage.textContent=data?.length?`${data.length} invitación${data.length===1?'':'es'} registradas.`:'Todavía no hay invitaciones.'}
-async function loadSettings(){const{data,error}=await supabase.from('wedding_settings').select('*').eq('id',true).maybeSingle();if(error||!data)return;const fields={'couple-names':'couple_names','welcome-text':'welcome_text','event-date':'event_date','reception-time':'reception_time','ceremony-time':'ceremony_time','venue-name':'venue_name','venue-address':'venue_address','maps-url':'maps_url','waze-url':'waze_url','parking-text':'parking_text','dress-code':'dress_code','gift-text':'gift_text','gift-url':'gift_url','hero-image-url':'hero_image_url','gallery-image-1':'gallery_image_1_url','gallery-image-2':'gallery_image_2_url','gallery-image-3':'gallery_image_3_url','gallery-image-4':'gallery_image_4_url'};Object.entries(fields).forEach(([id,key])=>{const el=$(`#${id}`);if(el)el.value=data[key]??''});copyDefs.forEach(([key])=>{const el=$(`#copy-${key}`);if(el)el.value=data[key]??''});imageDefs.forEach(([key,,fieldId])=>{const field=$(`#${fieldId}`),preview=field?.parentElement.querySelector('.admin-photo-preview');if(field?.value&&preview)preview.innerHTML=`<img src="${clean(field.value)}" alt="Vista previa">`})}
-async function saveCopy(){const message=$('#copy-message');message.textContent='Guardando…';const payload={};copyDefs.forEach(([key])=>payload[key]=$(`#copy-${key}`)?.value.trim()||null);const{error}=await supabase.from('wedding_settings').upsert({id:true,...payload,updated_at:new Date().toISOString()});message.textContent=error?error.message:'Textos guardados correctamente.'}
-async function toggleInvitation(id,active){if(!confirm(`¿Quieres ${active?'bloquear':'activar'} esta invitación?`))return;const{error}=await supabase.from('invitations').update({active:!active,updated_at:new Date().toISOString()}).eq('id',id);if(error){listMessage.textContent=error.message;return}await loadInvitations()}
-document.querySelector('#save-settings').addEventListener('click',async()=>{settingsMessage.textContent='Guardando…';const p={id:true,couple_names:$('#couple-names').value.trim(),welcome_text:$('#welcome-text').value.trim(),event_date:$('#event-date').value.trim(),reception_time:$('#reception-time').value.trim(),ceremony_time:$('#ceremony-time').value.trim(),venue_name:$('#venue-name').value.trim(),venue_address:$('#venue-address').value.trim(),maps_url:$('#maps-url').value.trim(),waze_url:$('#waze-url').value.trim(),parking_text:$('#parking-text').value.trim(),dress_code:$('#dress-code').value.trim(),gift_text:$('#gift-text').value.trim(),gift_url:$('#gift-url').value.trim(),hero_image_url:$('#hero-image-url').value.trim(),gallery_image_1_url:$('#gallery-image-1').value.trim(),gallery_image_2_url:$('#gallery-image-2').value.trim(),gallery_image_3_url:$('#gallery-image-3').value.trim(),gallery_image_4_url:$('#gallery-image-4').value.trim(),updated_at:new Date().toISOString()};const{error}=await supabase.from('wedding_settings').upsert(p);settingsMessage.textContent=error?error.message:'Cambios guardados correctamente.'});
-document.querySelector('#login').addEventListener('click',async()=>{authMessage.textContent='Entrando…';const email=$('#email').value.trim(),password=$('#password').value;if(!email||!password){authMessage.textContent='Escribe tu correo y contraseña.';return}const{error}=await supabase.auth.signInWithPassword({email,password});if(error){authMessage.textContent=error.message;return}if(!(await isAdmin())){await supabase.auth.signOut();authMessage.textContent='Esta cuenta no tiene permisos de administrador.';return}await refreshSession()});
-document.querySelector('#signup').addEventListener('click',async()=>{authMessage.textContent='Creando cuenta…';const email=$('#email').value.trim(),password=$('#password').value;if(!email||password.length<6){authMessage.textContent='Escribe un correo válido y una contraseña de al menos 6 caracteres.';return}const{data,error}=await supabase.auth.signUp({email,password});if(error){authMessage.textContent=error.message;return}authMessage.textContent=data.session?'Cuenta creada.':'Cuenta creada. Revisa tu correo para confirmar y luego inicia sesión.'});
-logout.addEventListener('click',async()=>{await supabase.auth.signOut();await refreshSession()});
-document.querySelector('#create-invitation').addEventListener('click',async()=>{formMessage.textContent='Generando invitación…';createdBox.classList.add('hidden');const name=$('#guest-name').value.trim(),total=Number($('#guest-total').value),allowChildren=$('#allow-children').checked;if(!name||!Number.isInteger(total)||total<1||total>100){formMessage.textContent='Completa nombre y cupos correctamente.';return}const{data,error}=await supabase.rpc('create_invitation',{p_name:name,p_total_guests:total,p_allow_children:allowChildren});const invitation=Array.isArray(data)?data[0]:data;if(error||!invitation){formMessage.textContent=error?.message||'No se pudo crear la invitación.';return}const url=invitationUrl(invitation.code);formMessage.textContent='Invitación creada correctamente.';createdBox.classList.remove('hidden');createdBox.innerHTML=`<strong>${clean(invitation.name)}</strong><br><span class="created-code">${clean(invitation.code)}</span><p class="notice">Código único para invitación, RSVP, QR y acceso.</p><div class="created-actions"><button id="copy-created" class="small-btn secondary" type="button">Copiar enlace</button><a class="small-btn secondary" target="_blank" rel="noopener" href="${clean(url)}">Ver invitación</a><a class="small-btn" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(`Hola ${invitation.name} 💕 Aquí tienes tu invitación: ${url}`)}">Enviar por WhatsApp</a></div>`;$('#copy-created').addEventListener('click',async()=>{await navigator.clipboard.writeText(url);$('#copy-created').textContent='Enlace copiado'});$('#guest-name').value='';$('#guest-total').value='2';$('#allow-children').checked=false;await loadInvitations()});
-async function refreshSession(){const admin=await isAdmin();authPanel.classList.toggle('hidden',admin);adminPanel.classList.toggle('hidden',!admin);logout.classList.toggle('hidden',!admin);if(admin){ensureCopyEditor();ensureImageUploaders();await Promise.all([loadInvitations(),loadSettings()])}}
-supabase.auth.onAuthStateChange(()=>refreshSession());refreshSession();
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+const $ = (s) => document.querySelector(s);
+const authPanel = $('#auth-panel');
+const adminPanel = $('#admin-panel');
+const logout = $('#logout');
+const authMessage = $('#auth-message');
+const formMessage = $('#form-message');
+const listMessage = $('#list-message');
+const body = $('#invitations-body');
+const createdBox = $('#created-box');
+
+const clean = (v) => String(v ?? '').replace(/[&<>\'"]/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[c]));
+
+async function isAdmin(){
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return false;
+  const { data, error } = await supabase.rpc('is_admin');
+  return !error && data === true;
+}
+
+async function loadInvitations(){
+  listMessage.textContent = 'Cargando…';
+  const { data, error } = await supabase.rpc('admin_invitation_summary');
+  if (error) { listMessage.textContent = error.message; return; }
+
+  let totalCupos = 0, totalIngresaron = 0;
+  body.innerHTML = (data || []).map((inv) => {
+    totalCupos += Number(inv.total_guests || 0);
+    totalIngresaron += Number(inv.used_guests || 0);
+    const available = Number(inv.available_guests ?? (Number(inv.total_guests || 0) - Number(inv.used_guests || 0)));
+    return `<tr>
+      <td><strong>${clean(inv.name)}</strong></td>
+      <td><span class="pill">${clean(inv.code)}</span></td>
+      <td>${inv.total_guests}</td>
+      <td>${inv.used_guests || 0}</td>
+      <td>${available}</td>
+      <td><span class="status ${inv.active ? 'status-on' : 'status-off'}">${inv.active ? 'Activa' : 'Bloqueada'}</span></td>
+      <td><button class="small-btn secondary" data-action="toggle" data-id="${clean(inv.id)}" data-active="${inv.active}" type="button">${inv.active ? 'Bloquear' : 'Activar'}</button></td>
+    </tr>`;
+  }).join('');
+
+  $('#summary-invitations').textContent = (data || []).length;
+  $('#summary-cupos').textContent = totalCupos;
+  $('#summary-ingresaron').textContent = totalIngresaron;
+  $('#summary-disponibles').textContent = Math.max(0, totalCupos - totalIngresaron);
+
+  body.querySelectorAll('[data-action="toggle"]').forEach((button) => {
+    button.addEventListener('click', () => toggleInvitation(button.dataset.id, button.dataset.active === 'true'));
+  });
+  listMessage.textContent = data?.length ? `${data.length} invitación${data.length === 1 ? '' : 'es'} registradas.` : 'Todavía no hay invitaciones.';
+}
+
+async function toggleInvitation(id, active){
+  if (!confirm(`¿Quieres ${active ? 'bloquear' : 'activar'} esta invitación?`)) return;
+  const { error } = await supabase.from('invitations').update({ active: !active, updated_at: new Date().toISOString() }).eq('id', id);
+  if (error) { listMessage.textContent = error.message; return; }
+  await loadInvitations();
+}
+
+$('#login').addEventListener('click', async () => {
+  authMessage.textContent = 'Entrando…';
+  const email = $('#email').value.trim();
+  const password = $('#password').value;
+  if (!email || !password) { authMessage.textContent = 'Escribe tu correo y contraseña.'; return; }
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) { authMessage.textContent = error.message; return; }
+  if (!(await isAdmin())) {
+    await supabase.auth.signOut();
+    authMessage.textContent = 'Esta cuenta no tiene permisos de administrador.';
+    return;
+  }
+  await refreshSession();
+});
+
+$('#signup').addEventListener('click', async () => {
+  authMessage.textContent = 'Creando cuenta…';
+  const email = $('#email').value.trim();
+  const password = $('#password').value;
+  if (!email || password.length < 6) { authMessage.textContent = 'Escribe un correo válido y una contraseña de al menos 6 caracteres.'; return; }
+  const { data, error } = await supabase.auth.signUp({ email, password });
+  if (error) { authMessage.textContent = error.message; return; }
+  authMessage.textContent = data.session ? 'Cuenta creada.' : 'Cuenta creada. Revisa tu correo para confirmar y luego inicia sesión.';
+});
+
+logout.addEventListener('click', async () => { await supabase.auth.signOut(); await refreshSession(); });
+
+$('#create-invitation').addEventListener('click', async () => {
+  formMessage.textContent = 'Generando código…';
+  createdBox.classList.add('hidden');
+  const name = $('#guest-name').value.trim();
+  const total = Number($('#guest-total').value);
+  const allowChildren = $('#allow-children').checked;
+  if (!name || !Number.isInteger(total) || total < 1 || total > 100) {
+    formMessage.textContent = 'Completa nombre y cupos correctamente.';
+    return;
+  }
+
+  const { data, error } = await supabase.rpc('create_invitation', {
+    p_name: name,
+    p_total_guests: total,
+    p_allow_children: allowChildren
+  });
+  const invitation = Array.isArray(data) ? data[0] : data;
+  if (error || !invitation) {
+    formMessage.textContent = error?.message || 'No se pudo crear el registro.';
+    return;
+  }
+
+  formMessage.textContent = 'Registro creado correctamente.';
+  createdBox.classList.remove('hidden');
+  createdBox.innerHTML = `<strong>${clean(invitation.name)}</strong><br><span class="created-code">${clean(invitation.code)}</span><p class="notice">Este código es único y queda vinculado al control de entrada.</p>`;
+  $('#guest-name').value = '';
+  $('#guest-total').value = '2';
+  $('#allow-children').checked = false;
+  await loadInvitations();
+});
+
+async function refreshSession(){
+  const admin = await isAdmin();
+  authPanel.classList.toggle('hidden', admin);
+  adminPanel.classList.toggle('hidden', !admin);
+  logout.classList.toggle('hidden', !admin);
+  if (admin) await loadInvitations();
+}
+
+supabase.auth.onAuthStateChange(() => refreshSession());
+refreshSession();
