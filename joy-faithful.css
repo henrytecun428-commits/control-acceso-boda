@@ -1,0 +1,118 @@
+/* Editorial wedding layout inspired by the provided reference captures.
+   Lightweight: pure CSS, no framework or animation library. */
+.page{position:relative;isolation:isolate;background:#fbfaf7;overflow:hidden}
+.page .page-inner{width:min(100%,1040px);position:relative;z-index:4}
+.page:has(.page-inner){padding-left:max(24px,7vw)!important;padding-right:max(24px,7vw)!important}
+
+/* Global rhythm */
+.page h2{letter-spacing:-.025em}
+.page .eyebrow{font-size:10px;letter-spacing:.24em}
+.page .lead,.page .muted{max-width:650px}
+.continue-btn{position:relative;z-index:8}
+
+/* Cover: photographic, restrained, editorial */
+.hero{min-height:100svh;background-color:#59645d}
+.hero::after{background:linear-gradient(180deg,rgba(18,24,21,.04),rgba(18,24,21,.12) 40%,rgba(18,24,21,.55))}
+.hero-content{width:min(100%,920px);padding:clamp(70px,12vh,130px) 24px}
+.hero .hero-frame{inset:20px;border-color:rgba(255,255,255,.42)}
+.hero h1{font-size:clamp(68px,12vw,142px);max-width:980px;margin-inline:auto}
+.hero .guest-line{margin-bottom:24px}
+.hero .hero-meta{margin-top:24px}
+
+/* RSVP: image-led left rail, dark content field */
+#rsvp{background:#26332e;min-height:100svh}
+#rsvp .rsvp-page-photo{left:0;top:0;bottom:0;width:38%;opacity:1;border-radius:0;background-image:linear-gradient(90deg,rgba(23,31,27,.04),rgba(23,31,27,.42)),var(--page-photo);background-position:center;background-size:cover;transform:none}
+#rsvp .page-inner{margin-left:31%;width:min(60%,700px);text-align:left;padding:0 2vw}
+#rsvp .rsvp-card{text-align:left}
+#rsvp .rsvp-card h2{max-width:650px}
+#rsvp .rsvp-box{max-width:510px;margin-left:0}
+#rsvp .continue-btn{margin-left:0}
+
+/* Schedule: split content + photographic panel like an editorial itinerary */
+#agenda{background:#f1ece4;justify-content:center}
+#agenda .page-photo-panel{right:0;top:0;bottom:0;width:46%;clip-path:none;border-radius:0;background-image:linear-gradient(90deg,rgba(241,236,228,.95) 0%,rgba(241,236,228,.48) 15%,rgba(241,236,228,.08) 38%),var(--page-photo);background-position:center;background-size:cover;opacity:1;transform:none}
+#agenda .page-inner{width:min(100%,1180px);margin:0;max-width:1180px;padding-right:43%}
+#agenda .timeline{width:100%;margin-top:42px}
+#agenda .timeline-item{grid-template-columns:96px 1fr;gap:26px;padding:26px 0}
+#agenda .dress-card{margin:36px 0 0;max-width:470px}
+#agenda .continue-btn{margin-left:0}
+
+/* Registry: photo ribbon across the bottom, centered copy */
+#regalos{background:#fbfaf7}
+#regalos .page-photo-panel{left:0;right:0;bottom:0;height:45%;background-image:linear-gradient(180deg,rgba(251,250,247,1),rgba(251,250,247,.24) 42%,rgba(251,250,247,.03)),var(--page-photo);background-position:center 44%;background-size:cover;opacity:1;transform:none}
+#regalos .page-inner{width:min(100%,820px);margin:auto}
+#regalos .gift-card{position:relative;z-index:4;background:rgba(255,255,255,.85);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);box-shadow:0 24px 75px rgba(50,48,40,.11)}
+
+/* Story: keep the strong image + text pairing */
+#historia{background:#f8f6f1}
+#historia .story-grid{width:min(100%,980px);grid-template-columns:minmax(0,1.06fr) minmax(0,.94fr);gap:56px}
+#historia .story-photo{min-height:560px}
+#historia .story-copy{padding:18px 8px}
+
+/* Travel: image rail left */
+#viaje{background:#eef0eb}
+#viaje .page-photo-panel{left:0;top:0;bottom:0;width:41%;border-radius:0 36px 36px 0;background-image:linear-gradient(90deg,rgba(238,240,235,.06),rgba(238,240,235,.43)),var(--page-photo);background-position:center;background-size:cover;opacity:1;transform:none}
+#viaje .page-inner{width:min(100%,900px);margin-left:33%;max-width:700px;text-align:left}
+#viaje .location-map-card{max-width:650px;margin-left:0;background:rgba(255,255,255,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+#viaje .action-row{justify-content:flex-start}
+#viaje .continue-btn{margin-left:0}
+
+/* FAQ: clean content with photographic right rail */
+#faq{background:#fbfaf7}
+#faq .page-photo-panel{right:0;top:9%;bottom:9%;width:36%;border-radius:30px 0 0 30px;background-image:linear-gradient(90deg,rgba(251,250,247,.9),rgba(251,250,247,.14)),var(--page-photo);background-position:center;background-size:cover;opacity:1;transform:none}
+#faq .page-inner{width:min(100%,920px);margin-left:4%;padding-right:32%;text-align:left}
+#faq .faq-list{margin-left:0;width:100%}
+#faq .continue-btn{margin-left:0}
+
+/* Photo gallery: large lead image + smaller supporting frames */
+#fotos{background:#f7f3ec}
+#fotos .page-inner{width:min(100%,1120px)}
+#fotos .gallery{margin-top:34px;max-height:57svh;grid-template-columns:1.35fr .65fr .65fr;grid-auto-rows:220px;gap:14px}
+#fotos .gallery-card{border-radius:18px}
+#fotos .gallery-large{grid-row:span 2}
+
+/* Access: centered invitation-pass treatment */
+.access{background:linear-gradient(145deg,#ece5d8,#fbfaf7)}
+.access .page-inner{width:min(100%,740px)}
+.access .access-code{box-shadow:0 16px 48px rgba(56,52,45,.10);font-family:"DM Sans",sans-serif}
+.access .qr-box{width:210px;height:210px;border-radius:20px;box-shadow:0 22px 65px rgba(45,48,43,.13)}
+
+/* Modal pass looks like a real ticket rather than a message box */
+.pass-card{width:min(100%,520px);border-radius:30px!important;background:linear-gradient(160deg,#fffdf9,#f4eee4)!important;box-shadow:0 35px 120px rgba(23,28,24,.28)!important;border:1px solid rgba(164,135,96,.22)!important}
+.pass-kicker,.pass-code-label{letter-spacing:.2em}
+.pass-title{font-family:"Cormorant Garamond",serif}
+.pass-qr{border-radius:22px!important;box-shadow:0 15px 45px rgba(45,48,43,.09)}
+.pass-code{background:#26332e!important;color:white!important;border-radius:12px!important}
+
+/* Make the composition hold together instead of stretching on wide monitors. */
+@media(min-width:1200px){.page{padding-left:5vw!important;padding-right:5vw!important}.page .page-inner{max-width:1020px}#agenda .page-inner{max-width:1180px;padding-right:43%}#viaje .page-inner{max-width:760px}#faq .page-inner{max-width:950px}}
+
+@media(max-width:900px){
+  #rsvp .rsvp-page-photo,#agenda .page-photo-panel,#viaje .page-photo-panel,#faq .page-photo-panel{left:18px!important;right:18px!important;top:10%!important;bottom:auto!important;width:auto!important;height:180px!important;border-radius:24px!important;clip-path:none!important;opacity:.2!important}
+  #rsvp .page-inner,#agenda .page-inner,#viaje .page-inner,#faq .page-inner{width:100%;max-width:760px!important;margin:auto!important;padding:150px 0 0!important;text-align:center}
+  #agenda .timeline,#agenda .dress-card,#viaje .location-map-card,#viaje .action-row,#faq .faq-list{margin-left:auto;margin-right:auto}
+  #agenda .timeline-item{grid-template-columns:76px 1fr;gap:14px}
+  #rsvp .rsvp-box{margin-left:auto;margin-right:auto}
+  #rsvp .continue-btn,#agenda .continue-btn,#viaje .continue-btn,#faq .continue-btn{margin-left:auto}
+  #fotos .gallery{max-height:46svh;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
+  #fotos .gallery-large{grid-column:1/3;grid-row:auto}
+}
+
+@media(max-width:560px){
+  .page .page-inner{width:100%!important}
+  .hero h1{font-size:clamp(50px,15vw,88px)}
+  .hero .hero-frame{inset:14px}
+  #rsvp .rsvp-page-photo,#agenda .page-photo-panel,#viaje .page-photo-panel,#faq .page-photo-panel{height:145px!important;opacity:.17!important}
+  #rsvp .page-inner,#agenda .page-inner,#viaje .page-inner,#faq .page-inner{padding-top:125px!important}
+  #historia .story-grid{grid-template-columns:1fr;gap:22px}
+  #historia .story-photo{min-height:300px}
+  #regalos .page-photo-panel{height:35%}
+  #fotos .gallery{max-height:42svh;gap:9px}
+  #fotos .gallery-card{border-radius:14px}
+}
+
+@media(max-height:720px){
+  #rsvp .rsvp-page-photo,#agenda .page-photo-panel,#viaje .page-photo-panel,#faq .page-photo-panel{height:105px!important}
+  #rsvp .page-inner,#agenda .page-inner,#viaje .page-inner,#faq .page-inner{padding-top:98px!important}
+  #historia .story-photo{min-height:230px}
+}
