@@ -19,85 +19,20 @@
     .actions{display:flex;gap:7px;flex-wrap:wrap}.small-btn{padding:8px 10px;border-radius:10px;font-size:11px}.secondary{background:#f3f0e9;color:var(--ink)}.secondary:hover{background:#e9e4da}.hidden{display:none!important}.notice{margin:12px 0 0;color:var(--muted);font-size:12px;line-height:1.5}
     .summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.summary{padding:16px;border-radius:15px;background:#f7f5f0}.summary strong{display:block;font-size:28px}.summary span{color:var(--muted);font-size:11px}
     .created-box{margin-top:16px;padding:16px;border-radius:16px;background:#f6f4ef;border:1px solid var(--line)}.created-box strong{font-family:"Cormorant Garamond",serif;font-size:24px}.created-code{display:inline-flex;margin-top:7px;padding:8px 12px;border-radius:10px;background:#fff;font-weight:800;letter-spacing:.14em}.created-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-    @media(max-width:800px){.admin-head{align-items:flex-start;flex-direction:column}.auth-grid,.settings-grid,.form-grid,.summary-grid{grid-template-columns:1fr}.full{grid-column:auto}}
+    .gallery-hint{padding:12px 14px;border-radius:14px;background:#f7f5f0;color:var(--muted);font-size:11px;line-height:1.5}.photo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.section-label{grid-column:1/-1;margin-top:6px;font-family:"Cormorant Garamond",serif;font-size:22px}
+    @media(max-width:800px){.admin-head{align-items:flex-start;flex-direction:column}.auth-grid,.settings-grid,.form-grid,.summary-grid,.photo-grid{grid-template-columns:1fr}.full{grid-column:auto}}
   </style>
 </head>
 <body>
-  <main class="page-shell">
-    <section class="admin-card">
-      <header class="admin-head">
-        <div><p class="eyebrow">PANEL PRIVADO</p><h1>Invitaciones</h1><p>Un solo sistema para crear, enviar y controlar cada invitación.</p></div>
-        <button id="logout" class="hidden" type="button">Cerrar sesión</button>
-      </header>
-
-      <section id="auth-panel" class="panel">
-        <h2>Entrar al panel</h2>
-        <div class="auth-grid">
-          <div class="field"><label for="email">Correo</label><input id="email" type="email" autocomplete="email" placeholder="tu correo"></div>
-          <div class="field"><label for="password">Contraseña</label><input id="password" type="password" autocomplete="current-password" placeholder="••••••••"></div>
-        </div>
-        <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap"><button id="login" type="button">Iniciar sesión</button><button id="signup" class="secondary" type="button">Crear cuenta</button></div>
-        <p id="auth-message" class="notice">Solo las cuentas autorizadas pueden entrar al panel.</p>
-      </section>
-
-      <section id="admin-panel" class="hidden">
-        <div class="panel">
-          <div class="summary-grid">
-            <div class="summary"><strong id="summary-invitations">0</strong><span>Invitaciones</span></div>
-            <div class="summary"><strong id="summary-cupos">0</strong><span>Cupos totales</span></div>
-            <div class="summary"><strong id="summary-confirmados">0</strong><span>Confirmados</span></div>
-            <div class="summary"><strong id="summary-ingresaron">0</strong><span>Personas ingresadas</span></div>
-          </div>
-        </div>
-
-        <div class="panel">
-          <h2>Datos de la boda</h2>
-          <div class="settings-grid">
-            <div class="field"><label for="couple-names">Pareja</label><input id="couple-names" type="text"></div>
-            <div class="field"><label for="event-date">Fecha</label><input id="event-date" type="text"></div>
-            <div class="field"><label for="reception-time">Recepción</label><input id="reception-time" type="text"></div>
-            <div class="field"><label for="ceremony-time">Ceremonia / cortejo</label><input id="ceremony-time" type="text"></div>
-            <div class="field"><label for="venue-name">Lugar</label><input id="venue-name" type="text"></div>
-            <div class="field"><label for="venue-address">Dirección</label><input id="venue-address" type="text"></div>
-            <div class="field"><label for="maps-url">Google Maps</label><input id="maps-url" type="url" placeholder="https://maps.google.com/..."></div>
-            <div class="field"><label for="waze-url">Waze</label><input id="waze-url" type="url" placeholder="https://waze.com/..."></div>
-            <div class="field"><label for="dress-code">Vestimenta</label><input id="dress-code" type="text"></div>
-            <div class="field"><label for="hero-image-url">Imagen principal (URL)</label><input id="hero-image-url" type="url" placeholder="https://..."></div>
-            <div class="field full"><label for="welcome-text">Mensaje de bienvenida</label><textarea id="welcome-text"></textarea></div>
-            <div class="field full"><label for="parking-text">Parqueo</label><textarea id="parking-text"></textarea></div>
-            <div class="field full"><label for="gift-text">Regalos</label><textarea id="gift-text"></textarea></div>
-            <div class="field"><label for="gift-url">Lista de regalos</label><input id="gift-url" type="url" placeholder="https://..."></div>
-          </div>
-          <div style="margin-top:14px"><button id="save-settings" type="button">Guardar datos de la boda</button></div>
-          <p id="settings-message" class="notice"></p>
-        </div>
-
-        <div class="panel">
-          <h2>Nueva invitación</h2>
-          <div class="form-grid">
-            <div class="field"><label for="guest-name">Nombre de la invitación</label><input id="guest-name" type="text" placeholder="Alejandro López"></div>
-            <div class="field"><label for="guest-total">Cupos</label><input id="guest-total" type="number" min="1" max="100" value="2"></div>
-            <div><button id="create-invitation" type="button">Crear invitación</button></div>
-          </div>
-          <label class="toggle"><input id="allow-children" type="checkbox"> Permitir niños</label>
-          <p class="notice">El código se genera automáticamente, es único y será el mismo código que usarán para entrar a la boda.</p>
-          <p id="form-message" class="notice"></p>
-          <div id="created-box" class="created-box hidden"></div>
-        </div>
-
-        <div class="panel">
-          <h2>Invitaciones registradas</h2>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Invitación</th><th>Código</th><th>Cupos</th><th>Confirmados</th><th>Ingresaron</th><th>Disponibles</th><th>RSVP</th><th>Estado</th><th>Acciones</th></tr></thead>
-              <tbody id="invitations-body"></tbody>
-            </table>
-          </div>
-          <p id="list-message" class="notice"></p>
-        </div>
-      </section>
+  <main class="page-shell"><section class="admin-card">
+    <header class="admin-head"><div><p class="eyebrow">PANEL PRIVADO</p><h1>Invitaciones</h1><p>Un solo sistema para crear, enviar y controlar cada invitación.</p></div><button id="logout" class="hidden" type="button">Cerrar sesión</button></header>
+    <section id="auth-panel" class="panel"><h2>Entrar al panel</h2><div class="auth-grid"><div class="field"><label for="email">Correo</label><input id="email" type="email" autocomplete="email" placeholder="tu correo"></div><div class="field"><label for="password">Contraseña</label><input id="password" type="password" autocomplete="current-password" placeholder="••••••••"></div></div><div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap"><button id="login" type="button">Iniciar sesión</button><button id="signup" class="secondary" type="button">Crear cuenta</button></div><p id="auth-message" class="notice">Solo las cuentas autorizadas pueden entrar al panel.</p></section>
+    <section id="admin-panel" class="hidden">
+      <div class="panel"><div class="summary-grid"><div class="summary"><strong id="summary-invitations">0</strong><span>Invitaciones</span></div><div class="summary"><strong id="summary-cupos">0</strong><span>Cupos totales</span></div><div class="summary"><strong id="summary-confirmados">0</strong><span>Confirmados</span></div><div class="summary"><strong id="summary-ingresaron">0</strong><span>Personas ingresadas</span></div></div></div>
+      <div class="panel"><h2>Datos de la boda</h2><div class="settings-grid"><div class="field"><label for="couple-names">Pareja</label><input id="couple-names" type="text"></div><div class="field"><label for="event-date">Fecha</label><input id="event-date" type="text"></div><div class="field"><label for="reception-time">Recepción</label><input id="reception-time" type="text"></div><div class="field"><label for="ceremony-time">Ceremonia / cortejo</label><input id="ceremony-time" type="text"></div><div class="field"><label for="venue-name">Lugar</label><input id="venue-name" type="text"></div><div class="field"><label for="venue-address">Dirección</label><input id="venue-address" type="text"></div><div class="field"><label for="maps-url">Google Maps</label><input id="maps-url" type="url" placeholder="https://maps.google.com/..."></div><div class="field"><label for="waze-url">Waze</label><input id="waze-url" type="url" placeholder="https://waze.com/..."></div><div class="field"><label for="dress-code">Vestimenta</label><input id="dress-code" type="text"></div><div class="field"><label for="hero-image-url">Foto principal (URL)</label><input id="hero-image-url" type="url" placeholder="https://..."></div><div class="field full"><label for="welcome-text">Mensaje de bienvenida</label><textarea id="welcome-text"></textarea></div><div class="field full"><label for="parking-text">Parqueo</label><textarea id="parking-text"></textarea></div><div class="field full"><label for="gift-text">Regalos</label><textarea id="gift-text"></textarea></div><div class="field"><label for="gift-url">Lista de regalos</label><input id="gift-url" type="url" placeholder="https://..."></div><div class="section-label">Galería</div><div class="gallery-hint">Agrega hasta 4 fotos. Puedes pegar enlaces directos de imágenes ahora; más adelante podemos cambiar estos campos por una carga directa desde el teléfono.</div><div class="photo-grid full"><div class="field"><label for="gallery-image-1">Foto 1</label><input id="gallery-image-1" type="url" placeholder="https://..."></div><div class="field"><label for="gallery-image-2">Foto 2</label><input id="gallery-image-2" type="url" placeholder="https://..."></div><div class="field"><label for="gallery-image-3">Foto 3</label><input id="gallery-image-3" type="url" placeholder="https://..."></div><div class="field"><label for="gallery-image-4">Foto 4</label><input id="gallery-image-4" type="url" placeholder="https://..."></div></div></div><div style="margin-top:14px"><button id="save-settings" type="button">Guardar datos de la boda</button></div><p id="settings-message" class="notice"></p></div>
+      <div class="panel"><h2>Nueva invitación</h2><div class="form-grid"><div class="field"><label for="guest-name">Nombre de la invitación</label><input id="guest-name" type="text" placeholder="Alejandro López"></div><div class="field"><label for="guest-total">Cupos</label><input id="guest-total" type="number" min="1" max="100" value="2"></div><div><button id="create-invitation" type="button">Crear invitación</button></div></div><label class="toggle"><input id="allow-children" type="checkbox"> Permitir niños</label><p class="notice">El código se genera automáticamente, es único y será el mismo código que usarán para entrar a la boda.</p><p id="form-message" class="notice"></p><div id="created-box" class="created-box hidden"></div></div>
+      <div class="panel"><h2>Invitaciones registradas</h2><div class="table-wrap"><table><thead><tr><th>Invitación</th><th>Código</th><th>Cupos</th><th>Confirmados</th><th>Ingresaron</th><th>Disponibles</th><th>RSVP</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="invitations-body"></tbody></table></div><p id="list-message" class="notice"></p></div>
     </section>
-  </main>
+  </section></main>
   <script type="module" src="admin.js"></script>
-</body>
-</html>
+</body></html>
