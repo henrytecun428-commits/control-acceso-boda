@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#202c28">
+  <meta name="description" content="Invitación digital de boda">
+  <title>Invitación · Boda</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="invitacion.css">
+</head>
+<body>
+  <div id="loading" class="loading">Preparando tu invitación…</div>
+  <main id="invite" class="site hidden">
+    <section class="hero" id="inicio">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <p class="eyebrow">UNA INVITACIÓN PARA TI</p>
+        <p class="guest-line">Con cariño para <span id="guest-name">Invitado</span></p>
+        <h1 id="couple-names">Alejandro &amp; Sarah</h1>
+        <p id="hero-date" class="hero-date">26 de septiembre de 2026</p>
+        <a class="scroll-cue" href="#bienvenida" aria-label="Continuar">Desliza para continuar <span>↓</span></a>
+      </div>
+    </section>
+
+    <nav class="floating-nav" aria-label="Navegación de invitación">
+      <a href="#bienvenida">Inicio</a><a href="#evento">El día</a><a href="#ubicacion">Ubicación</a><a href="#rsvp">RSVP</a>
+    </nav>
+
+    <section id="bienvenida" class="section intro reveal">
+      <p class="eyebrow">CON MUCHO CARIÑO</p>
+      <h2 id="welcome-title">Queremos celebrarlo contigo</h2>
+      <p id="welcome-text" class="lead"></p>
+      <div class="divider">✦</div>
+    </section>
+
+    <section id="evento" class="section sand reveal">
+      <div class="section-heading"><p class="eyebrow">EL GRAN DÍA</p><h2>Todo comienza aquí</h2></div>
+      <div class="timeline">
+        <article class="timeline-item"><span class="time" id="reception-time">3:00 PM</span><div><h3>Recepción</h3><p>Te esperamos con tiempo para recibirte y compartir contigo desde el inicio.</p></div></article>
+        <article class="timeline-item"><span class="time" id="ceremony-time">4:00 PM</span><div><h3>Ceremonia</h3><p>El momento que hemos esperado. Te agradecemos estar antes para no perderte nada.</p></div></article>
+      </div>
+      <div class="dress-card"><p class="eyebrow">CÓDIGO DE VESTIMENTA</p><strong id="dress-code">Formal / Elegante</strong></div>
+    </section>
+
+    <section id="ubicacion" class="section reveal">
+      <div class="section-heading"><p class="eyebrow">ENCUÉNTRANOS</p><h2 id="venue-name">Lugar de la celebración</h2><p id="venue-address" class="muted"></p></div>
+      <div class="location-actions"><a id="maps-link" class="action-btn" href="#" target="_blank" rel="noopener">Google Maps</a><a id="waze-link" class="action-btn outline" href="#" target="_blank" rel="noopener">Waze</a></div>
+      <p id="parking-text" class="muted centered"></p>
+    </section>
+
+    <section class="section sand reveal">
+      <div class="section-heading"><p class="eyebrow">UN PEQUEÑO DETALLE</p><h2>Regalos</h2></div>
+      <p id="gift-text" class="lead compact"></p>
+      <a id="gift-link" class="action-btn" href="#" target="_blank" rel="noopener">Ver lista de regalos</a>
+    </section>
+
+    <section id="rsvp" class="section rsvp reveal">
+      <div class="rsvp-card">
+        <p class="eyebrow">TU INVITACIÓN</p>
+        <h2 id="rsvp-guest">Invitado</h2>
+        <p>Hemos reservado <strong id="total-guests">0</strong> lugares para ti.</p>
+        <div class="rsvp-box">
+          <p class="label">¿Cuántas personas asistirán?</p>
+          <div class="counter"><button id="minus" type="button" aria-label="Restar">−</button><strong id="count">1</strong><button id="plus" type="button" aria-label="Sumar">+</button></div>
+          <button id="confirm" class="primary-btn" type="button">Confirmar asistencia</button>
+          <button id="decline" class="text-btn" type="button">No podremos asistir</button>
+          <p id="rsvp-message" class="rsvp-message" aria-live="polite"></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section access reveal">
+      <p class="eyebrow">PARA EL DÍA DE LA BODA</p>
+      <h2>Tu código de acceso</h2>
+      <p class="muted">Guárdalo. Este mismo código se utilizará para registrar tu entrada.</p>
+      <div id="code" class="access-code">BODA-XXXXXX</div>
+      <div id="qr" class="qr-box"></div>
+      <p class="tiny">Presenta este código o QR al llegar.</p>
+    </section>
+
+    <footer class="footer"><span id="footer-couple">Alejandro &amp; Sarah</span><span>✦</span><span>Con amor</span></footer>
+  </main>
+  <script type="module" src="invitacion.js"></script>
+</body>
+</html>
