@@ -4,12 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#17221d">
-  <meta name="description" content="Sistema de control de acceso para invitados de boda.">
+  <meta name="description" content="Control de acceso para invitados de boda">
   <title>Control de Acceso · Boda</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <style>
+    .scanner-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}.scan-button{min-height:48px;padding:0 20px;border:1px solid #26332e;background:#26332e;color:#fff;border-radius:13px;font:inherit;font-size:12px;font-weight:800;cursor:pointer}.scan-button.outline{background:transparent;color:#26332e}.camera-modal{position:fixed;inset:0;z-index:90;display:grid;place-items:center;padding:20px;background:rgba(17,23,20,.76);backdrop-filter:blur(14px)}.camera-modal.hidden{display:none}.camera-card{width:min(100%,520px);padding:22px;background:#f8f5ef;border-radius:24px;box-shadow:0 35px 90px rgba(0,0,0,.28)}.camera-card h2{margin:0;font-family:"Cormorant Garamond",serif;font-size:36px}.camera-card p{color:#70766f;font-size:12px;line-height:1.55}.camera-frame{margin:18px 0;border-radius:18px;overflow:hidden;background:#111;aspect-ratio:4/3;position:relative}.camera-frame video{width:100%;height:100%;object-fit:cover}.camera-frame:after{content:"";position:absolute;inset:18% 12%;border:2px solid rgba(255,255,255,.72);border-radius:16px;box-shadow:0 0 0 999px rgba(0,0,0,.10)}.camera-note{min-height:18px;margin:0}.camera-footer{display:flex;justify-content:flex-end;gap:9px}.camera-close{min-height:44px;padding:0 15px;border:1px solid #ddd5c8;background:#fff;color:#2f3933;border-radius:12px;font:inherit;font-size:11px;font-weight:800;cursor:pointer}.scan-status{margin-top:12px;text-align:center;font-size:11px;color:#72776f}.auto-code{margin-top:8px;font-size:11px;color:#8a857b;text-align:center}
+  </style>
 </head>
 <body>
   <main class="page-shell">
@@ -21,22 +24,18 @@
 
       <form id="code-form" class="code-form" novalidate>
         <label for="invite-code">Código de invitación</label>
-        <div class="input-row">
-          <input id="invite-code" name="invite-code" type="text" autocomplete="off" autocapitalize="characters" maxlength="20" placeholder="Ej. ALE123" aria-describedby="code-help" required>
-          <button type="submit">Verificar</button>
-        </div>
-        <p id="code-help" class="helper">El código identifica la invitación completa, no a una sola persona.</p>
+        <div class="input-row"><input id="invite-code" name="invite-code" type="text" autocomplete="off" autocapitalize="characters" maxlength="32" placeholder="BODA-XXXXXX" aria-describedby="code-help" required><button type="submit">Verificar</button></div>
+        <p id="code-help" class="helper">También puedes escanear el QR del pase.</p>
+        <div class="scanner-actions"><button id="scan-qr" class="scan-button" type="button">Escanear QR</button><button id="clear-check" class="scan-button outline" type="button">Nueva verificación</button></div>
       </form>
 
+      <p id="auto-code" class="auto-code"></p>
       <section id="result" class="result-panel" hidden aria-live="polite"></section>
-
-      <footer class="footer-note">
-        <span>Acceso seguro</span>
-        <span>•</span>
-        <span>Invitados en tiempo real</span>
-      </footer>
+      <footer class="footer-note"><span>Acceso seguro</span><span>•</span><span>Invitados en tiempo real</span></footer>
     </section>
   </main>
+
+  <div id="camera-modal" class="camera-modal hidden" role="dialog" aria-modal="true" aria-label="Escanear QR"><section class="camera-card"><h2>Escanear pase</h2><p>Apunta la cámara al código QR del invitado. El sistema reconocerá automáticamente el código.</p><div class="camera-frame"><video id="qr-video" playsinline muted></video></div><p id="camera-note" class="camera-note">Solicitando cámara…</p><div class="camera-footer"><button id="camera-close" class="camera-close" type="button">Cerrar</button></div></section></div>
   <script type="module" src="app.js"></script>
 </body>
 </html>
