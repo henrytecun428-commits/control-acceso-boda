@@ -50,11 +50,11 @@ async function loadInvitations(){
   body.querySelectorAll('[data-action="toggle"]').forEach((button) => {
     button.addEventListener('click', () => toggleInvitation(button.dataset.id, button.dataset.active === 'true'));
   });
-  listMessage.textContent = data?.length ? `${data.length} invitación${data.length === 1 ? '' : 'es'} registradas.` : 'Todavía no hay invitaciones.';
+  listMessage.textContent = data?.length ? `${data.length} grupo${data.length === 1 ? '' : 's'} registrado${data.length === 1 ? '' : 's'}.` : 'Todavía no hay grupos.';
 }
 
 async function toggleInvitation(id, active){
-  if (!confirm(`¿Quieres ${active ? 'bloquear' : 'activar'} esta invitación?`)) return;
+  if (!confirm(`¿Quieres ${active ? 'bloquear' : 'activar'} este grupo?`)) return;
   const { error } = await supabase.from('invitations').update({ active: !active, updated_at: new Date().toISOString() }).eq('id', id);
   if (error) { listMessage.textContent = error.message; return; }
   await loadInvitations();
@@ -88,20 +88,35 @@ $('#signup').addEventListener('click', async () => {
 logout.addEventListener('click', async () => { await supabase.auth.signOut(); await refreshSession(); });
 
 $('#create-invitation').addEventListener('click', async () => {
-  formMessage.textContent = 'Generando código…';
+  formMessage.textContent = 'Guardando grupo…';
   createdBox.classList.add('hidden');
   const name = $('#guest-name').value.trim();
   const total = Number($('#guest-total').value);
+  const code = $('#guest-code').value.trim().toUpperCase();
   const allowChildren = $('#allow-children').checked;
+
   if (!name || !Number.isInteger(total) || total < 1 || total > 100) {
     formMessage.textContent = 'Completa nombre y cupos correctamente.';
+    return;
+  }
+  if (!code) {
+    formMessage.textContent = 'Escribe el código que quieres asignar.';
+    return;
+  }
+  if (!/^[A-Z0-9][A-Z0-9_-]*$/.test(code)) {
+    formMessage.textContent = 'El código solo puede contener letras, números, guion y guion bajo.';
+    return;
+  }
+  if (code.length > 32) {
+    formMessage.textContent = 'El código no puede superar 32 caracteres.';
     return;
   }
 
   const { data, error } = await supabase.rpc('create_invitation', {
     p_name: name,
     p_total_guests: total,
-    p_allow_children: allowChildren
+    p_allow_children: allowChildren,
+    p_code: code
   });
   const invitation = Array.isArray(data) ? data[0] : data;
   if (error || !invitation) {
@@ -109,11 +124,12 @@ $('#create-invitation').addEventListener('click', async () => {
     return;
   }
 
-  formMessage.textContent = 'Registro creado correctamente.';
+  formMessage.textContent = 'Grupo creado correctamente.';
   createdBox.classList.remove('hidden');
-  createdBox.innerHTML = `<strong>${clean(invitation.name)}</strong><br><span class="created-code">${clean(invitation.code)}</span><p class="notice">Este código es único y queda vinculado al control de entrada.</p>`;
+  createdBox.innerHTML = `<strong>${clean(invitation.name)}</strong><br><span class="created-code">${clean(invitation.code)}</span><p class="notice">Este es el código que tú asignaste y que se usará en el control de entrada.</p>`;
   $('#guest-name').value = '';
   $('#guest-total').value = '2';
+  $('#guest-code').value = '';
   $('#allow-children').checked = false;
   await loadInvitations();
 });
