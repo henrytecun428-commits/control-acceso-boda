@@ -8,25 +8,30 @@
   <title>Invitación · Boda</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=Italiana&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="invitacion.css">
 </head>
 <body>
   <div id="loading" class="loading">Preparando tu invitación…</div>
+
   <main id="invite" class="site hidden">
+    <div class="floating-petals" aria-hidden="true"><span>✦</span><span>·</span><span>✦</span><span>·</span><span>✦</span></div>
+
     <section class="hero" id="inicio">
       <div class="hero-overlay"></div>
-      <div class="hero-content">
+      <div class="hero-grain"></div>
+      <div class="hero-frame"></div>
+      <div class="hero-content reveal-initial">
         <p class="eyebrow">UNA INVITACIÓN PARA TI</p>
         <p class="guest-line">Con cariño para <span id="guest-name">Invitado</span></p>
         <h1 id="couple-names">Alejandro &amp; Sarah</h1>
-        <p id="hero-date" class="hero-date">26 de septiembre de 2026</p>
+        <div class="hero-meta"><span>♡</span><span id="hero-date">26 de septiembre de 2026</span><span>♡</span></div>
         <a class="scroll-cue" href="#bienvenida" aria-label="Continuar">Desliza para continuar <span>↓</span></a>
       </div>
     </section>
 
     <nav class="floating-nav" aria-label="Navegación de invitación">
-      <a href="#bienvenida">Inicio</a><a href="#evento">El día</a><a href="#ubicacion">Ubicación</a><a href="#rsvp">RSVP</a>
+      <a href="#bienvenida">Inicio</a><a href="#historia">Historia</a><a href="#evento">El día</a><a href="#fotos">Fotos</a><a href="#ubicacion">Ubicación</a><a href="#rsvp">RSVP</a>
     </nav>
 
     <section id="bienvenida" class="section intro reveal">
@@ -34,6 +39,23 @@
       <h2 id="welcome-title">Queremos celebrarlo contigo</h2>
       <p id="welcome-text" class="lead"></p>
       <div class="divider">✦</div>
+      <div id="countdown" class="countdown" hidden aria-label="Cuenta regresiva">
+        <div><strong id="days">—</strong><span>Días</span></div>
+        <div><strong id="hours">—</strong><span>Horas</span></div>
+        <div><strong id="minutes">—</strong><span>Min</span></div>
+        <div><strong id="seconds">—</strong><span>Seg</span></div>
+      </div>
+    </section>
+
+    <section id="historia" class="section story reveal">
+      <div class="section-heading"><p class="eyebrow">NUESTRA HISTORIA</p><h2>Un capítulo que queremos compartir contigo</h2></div>
+      <div class="story-grid">
+        <div class="story-photo photo-a" aria-hidden="true"><span>Una historia de amor</span></div>
+        <div class="story-copy">
+          <p id="story-text" class="lead compact">Cada historia tiene momentos que se convierten en recuerdos para toda la vida. Esta invitación es una pequeña ventana a uno de los días más importantes de la nuestra.</p>
+          <div class="signature">con amor ✦</div>
+        </div>
+      </div>
     </section>
 
     <section id="evento" class="section sand reveal">
@@ -45,16 +67,43 @@
       <div class="dress-card"><p class="eyebrow">CÓDIGO DE VESTIMENTA</p><strong id="dress-code">Formal / Elegante</strong></div>
     </section>
 
-    <section id="ubicacion" class="section reveal">
+    <section id="fotos" class="section reveal gallery-section">
+      <div class="section-heading"><p class="eyebrow">MOMENTOS</p><h2>Recuerdos que nos acompañan</h2><p class="muted">Un espacio visual para la sesión de compromiso, fotos favoritas y momentos que cuenten su historia.</p></div>
+      <div class="gallery" aria-label="Galería de fotos">
+        <button class="gallery-card gallery-large" type="button" data-gallery-index="0" aria-label="Abrir foto 1"><span>Un momento para recordar</span></button>
+        <button class="gallery-card" type="button" data-gallery-index="1" aria-label="Abrir foto 2"><span>Juntos</span></button>
+        <button class="gallery-card" type="button" data-gallery-index="2" aria-label="Abrir foto 3"><span>Nuestro día</span></button>
+        <button class="gallery-card" type="button" data-gallery-index="3" aria-label="Abrir foto 4"><span>Siempre</span></button>
+      </div>
+    </section>
+
+    <section id="ubicacion" class="section sand reveal">
       <div class="section-heading"><p class="eyebrow">ENCUÉNTRANOS</p><h2 id="venue-name">Lugar de la celebración</h2><p id="venue-address" class="muted"></p></div>
       <div class="location-actions"><a id="maps-link" class="action-btn" href="#" target="_blank" rel="noopener">Google Maps</a><a id="waze-link" class="action-btn outline" href="#" target="_blank" rel="noopener">Waze</a></div>
       <p id="parking-text" class="muted centered"></p>
+    </section>
+
+    <section class="section details reveal">
+      <div class="details-grid">
+        <article class="detail-card"><span class="detail-icon">◌</span><p class="eyebrow">LLEGADA</p><h3>Planea con tiempo</h3><p class="muted">Te recomendamos salir con anticipación para disfrutar el día sin prisas.</p></article>
+        <article class="detail-card"><span class="detail-icon">♧</span><p class="eyebrow">VESTIMENTA</p><h3 id="dress-code-alt">Elegante</h3><p class="muted">Queremos que te sientas cómodo y espectacular para celebrar.</p></article>
+        <article class="detail-card"><span class="detail-icon">♡</span><p class="eyebrow">REGALOS</p><h3>Gracias por el cariño</h3><p class="muted">Tu presencia es nuestro mejor regalo. Si deseas acompañarnos con un detalle, aquí encontrarás la información.</p></article>
+      </div>
     </section>
 
     <section class="section sand reveal">
       <div class="section-heading"><p class="eyebrow">UN PEQUEÑO DETALLE</p><h2>Regalos</h2></div>
       <p id="gift-text" class="lead compact"></p>
       <a id="gift-link" class="action-btn" href="#" target="_blank" rel="noopener">Ver lista de regalos</a>
+    </section>
+
+    <section class="section faq reveal">
+      <div class="section-heading"><p class="eyebrow">PREGUNTAS FRECUENTES</p><h2>Todo lo que necesitas saber</h2></div>
+      <div class="faq-list">
+        <details open><summary>¿Hay parqueo disponible?</summary><p id="faq-parking">Sí. Consulta la sección de ubicación para ver los detalles.</p></details>
+        <details><summary>¿Puedo llevar niños?</summary><p id="faq-children">La información de tu invitación es personalizada.</p></details>
+        <details><summary>¿Dónde puedo ver el código de acceso?</summary><p>Al final de esta invitación encontrarás tu código y QR. Guárdalos para el día de la boda.</p></details>
+      </div>
     </section>
 
     <section id="rsvp" class="section rsvp reveal">
@@ -80,6 +129,12 @@
       <div id="qr" class="qr-box"></div>
       <p class="tiny">Presenta este código o QR al llegar.</p>
     </section>
+
+    <div id="lightbox" class="lightbox hidden" role="dialog" aria-modal="true" aria-label="Vista de foto">
+      <button id="lightbox-close" class="lightbox-close" type="button" aria-label="Cerrar">×</button>
+      <div id="lightbox-art" class="lightbox-art"></div>
+      <p id="lightbox-caption"></p>
+    </div>
 
     <footer class="footer"><span id="footer-couple">Alejandro &amp; Sarah</span><span>✦</span><span>Con amor</span></footer>
   </main>
