@@ -10,19 +10,21 @@ const formMessage = document.querySelector('#form-message');
 const listMessage = document.querySelector('#list-message');
 const body = document.querySelector('#invitations-body');
 
-const clean = (value) => String(value ?? '').replace(/[&<>'"]/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[c]));
+const clean = (value) => String(value ?? '').replace(/[&<>'"]/g, (c) => ({ '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;' }[c]));
 
 async function isAdmin() {
   const { data: { user } } = await supabase.auth.getUser();
-  return !!user;
+  if (!user) return false;
+  const { data, error } = await supabase.rpc('is_admin');
+  return !error && data === true;
 }
 
 async function refreshSession() {
-  const logged = await isAdmin();
-  authPanel.classList.toggle('hidden', logged);
-  adminPanel.classList.toggle('hidden', !logged);
-  logout.classList.toggle('hidden', !logged);
-  if (logged) await loadInvitations();
+  const admin = await isAdmin();
+  authPanel.classList.toggle('hidden', admin);
+  adminPanel.classList.toggle('hidden', !admin);
+  logout.classList.toggle('hidden', !admin);
+  if (admin) await loadInvitations();
 }
 
 async function loadInvitations() {
@@ -34,6 +36,7 @@ async function loadInvitations() {
 
   if (error) {
     listMessage.textContent = error.message;
+    body.innerHTML = '';
     return;
   }
 
@@ -47,20 +50,21 @@ async function loadInvitations() {
       <td>${used}</td>
       <td>${available}</td>
       <td>${inv.allow_children ? 'Sí' : 'No'}</td>
-      <td>${inv.active ? 'Activa' : 'Bloqueada'}</td>
-      <td><button class="danger-link" data-id="${inv.id}" type="button">Eliminar</button></td>
+      <td><span class="status ${inv.active ? 'status-on' : 'status-off'}">${inv.active ? 'Activa' : 'Bloqueada'}</span></td>
+      <td><button class="secondary-link" data-action="toggle" data-id="${inv.id}" data-active="${inv.active}" type="button">${inv.active ? 'Bloquear' : 'Activar'}</button></td>
     </tr>`;
   }).join('');
 
-  body.querySelectorAll('[data-id]').forEach((button) => {
-    button.addEventListener('click', () => deleteInvitation(button.dataset.id));
+  body.querySelectorAll('[data-action="toggle"]').forEach((button) => {
+    button.addEventListener('click', () => toggleInvitation(button.dataset.id, button.dataset.active === 'true'));
   });
-  listMessage.textContent = data.length ? '' : 'Todavía no hay invitaciones.';
+  listMessage.textContent = data.length ? `${data.length} invitación${data.length === 1 ? '' : 'es'} registradas.` : 'Todavía no hay invitaciones.';
 }
 
-async function deleteInvitation(id) {
-  if (!confirm('¿Eliminar esta invitación? Solo hazlo si estás seguro.')) return;
-  const { error } = await supabase.from('invitations').delete().eq('id', id);
+async function toggleInvitation(id, active) {
+  const action = active ? 'bloquear' : 'activar';
+  if (!confirm(`¿Quieres ${action} esta invitación?`)) return;
+  const { error } = await supabase.from('invitations').update({ active: !active }).eq('id', id);
   if (error) {
     listMessage.textContent = error.message;
     return;
@@ -72,17 +76,32 @@ document.querySelector('#login').addEventListener('click', async () => {
   authMessage.textContent = 'Entrando...';
   const email = document.querySelector('#email').value.trim();
   const password = document.querySelector('#password').value;
+  if (!email || !password) {
+    authMessage.textContent = 'Escribe tu correo y contraseña.';
+    return;
+  }
   const { error } = await supabase.auth.signInWithPassword({ email, password });
-  authMessage.textContent = error ? error.message : 'Sesión iniciada.';
-  if (!error) await refreshSession();
+  if (error) {
+    authMessage.textContent = error.message;
+    return;
+  }
+
+  if (!(await isAdmin())) {
+    await supabase.auth.signOut();
+    authMessage.textContent = 'Esta cuenta no tiene permisos de administrador.';
+    return;
+  }
+
+  authMessage.textContent = 'Sesión iniciada.';
+  await refreshSession();
 });
 
 document.querySelector('#signup').addEventListener('click', async () => {
   authMessage.textContent = 'Creando cuenta...';
   const email = document.querySelector('#email').value.trim();
   const password = document.querySelector('#password').value;
-  if (password.length < 6) {
-    authMessage.textContent = 'La contraseña debe tener al menos 6 caracteres.';
+  if (!email || password.length < 6) {
+    authMessage.textContent = 'Escribe un correo válido y una contraseña de al menos 6 caracteres.';
     return;
   }
   const { data, error } = await supabase.auth.signUp({ email, password });
@@ -90,8 +109,9 @@ document.querySelector('#signup').addEventListener('click', async () => {
     authMessage.textContent = error.message;
     return;
   }
-  authMessage.textContent = data.session ? 'Cuenta creada.' : 'Cuenta creada. Revisa tu correo para confirmar y luego inicia sesión.';
-  if (data.session) await refreshSession();
+  authMessage.textContent = data.session
+    ? 'Cuenta creada. Comprueba que esta sea la cuenta administradora autorizada.'
+    : 'Cuenta creada. Revisa tu correo para confirmar y luego inicia sesión.';
 });
 
 logout.addEventListener('click', async () => {
@@ -106,7 +126,7 @@ document.querySelector('#create-invitation').addEventListener('click', async () 
   const total = Number(document.querySelector('#guest-total').value);
   const allowChildren = document.querySelector('#allow-children').checked;
 
-  if (!name || !code || !Number.isInteger(total) || total < 1) {
+  if (!name || !code || !Number.isInteger(total) || total < 1 || total > 100) {
     formMessage.textContent = 'Completa nombre, código y cupos correctamente.';
     return;
   }
