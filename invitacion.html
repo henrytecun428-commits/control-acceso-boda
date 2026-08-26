@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=Italiana&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="invitacion.css">
+  <link rel="stylesheet" href="experience.css">
 </head>
 <body>
   <div id="loading" class="loading"><span>Preparando tu invitación…</span></div>
@@ -17,74 +18,17 @@
     <div class="floating-petals" aria-hidden="true"><span>✦</span><span>·</span><span>✦</span><span>·</span><span>✦</span></div>
     <div class="story-progress" aria-label="Progreso de la invitación"><div id="progress-bar"></div></div>
     <div id="page-dots" class="page-dots" aria-label="Secciones"></div>
-
-    <section class="page hero" id="inicio" data-page-label="Inicio">
-      <div class="hero-overlay"></div><div class="hero-grain"></div><div class="hero-frame"></div>
-      <div class="hero-content reveal-initial">
-        <p class="eyebrow">UNA INVITACIÓN ESPECIAL</p>
-        <p class="guest-line">Preparada con cariño para <span id="guest-name">Invitado</span></p>
-        <h1 id="couple-names">Alejandro &amp; Sarah</h1>
-        <div class="hero-meta"><span>♡</span><span id="hero-date">26 de septiembre de 2026</span><span>♡</span></div>
-        <button class="continue-btn" type="button" data-next-page>Descubrir la invitación <span>↓</span></button>
-      </div>
-    </section>
-
-    <nav class="floating-nav" aria-label="Navegación de invitación">
-      <button type="button" data-go-page="1">Inicio</button><button type="button" data-go-page="2">Historia</button><button type="button" data-go-page="3">El día</button><button type="button" data-go-page="4">Fotos</button><button type="button" data-go-page="5">Ubicación</button><button type="button" data-go-page="6">RSVP</button><button type="button" data-go-page="7">Pase</button>
-    </nav>
-
-    <section id="bienvenida" class="page section intro reveal" data-page-label="Bienvenida">
-      <p class="eyebrow">QUEREMOS COMPARTIRLO CONTIGO</p>
-      <h2>Hay días que merecen celebrarse para siempre.</h2>
-      <p id="welcome-text" class="lead">Nos hace mucha ilusión que formes parte de este momento. Hemos preparado esta invitación para que descubras cada detalle de nuestro gran día.</p>
-      <div class="divider">✦</div>
-      <div id="countdown" class="countdown" hidden aria-label="Cuenta regresiva"><div><strong id="days">—</strong><span>Días</span></div><div><strong id="hours">—</strong><span>Horas</span></div><div><strong id="minutes">—</strong><span>Min</span></div><div><strong id="seconds">—</strong><span>Seg</span></div></div>
-      <button class="continue-btn dark" type="button" data-next-page>Seguir <span>→</span></button>
-    </section>
-
-    <section id="historia" class="page section story reveal" data-page-label="Historia">
-      <div class="section-heading"><p class="eyebrow">NUESTRA HISTORIA</p><h2>Un capítulo nuevo está a punto de comenzar.</h2></div>
-      <div class="story-grid"><div class="story-photo photo-a" aria-hidden="true"><span>Una historia hecha de momentos</span></div><div class="story-copy"><p class="lead compact">Entre miradas, conversaciones, risas y recuerdos, llegamos hasta aquí. Ahora queremos celebrar lo que viene, rodeados de las personas que hacen especial nuestra historia.</p><div class="signature">con amor, siempre ✦</div></div></div>
-      <button class="continue-btn dark" type="button" data-next-page>Conocer el gran día <span>→</span></button>
-    </section>
-
-    <section id="evento" class="page section sand reveal" data-page-label="El gran día">
-      <div class="section-heading"><p class="eyebrow">EL GRAN DÍA</p><h2>Este es el momento.</h2><p class="muted">Queremos que llegues sin prisas y vivas cada instante con nosotros.</p></div>
-      <div class="timeline"><article class="timeline-item"><span class="time" id="reception-time">3:00 PM</span><div><h3>Recepción</h3><p>Te recibiremos con alegría para comenzar juntos esta celebración.</p></div></article><article class="timeline-item"><span class="time" id="ceremony-time">4:00 PM</span><div><h3>Ceremonia</h3><p>El instante que dará inicio oficialmente a nuestro nuevo capítulo.</p></div></article></div>
-      <div class="dress-card"><p class="eyebrow">VESTIMENTA</p><strong id="dress-code">Formal / Elegante</strong><p class="muted">Queremos verte cómodo, elegante y listo para celebrar.</p></div>
-      <button class="continue-btn dark" type="button" data-next-page>Ver nuestros momentos <span>→</span></button>
-    </section>
-
-    <section id="fotos" class="page section reveal gallery-section" data-page-label="Fotos">
-      <div class="section-heading"><p class="eyebrow">MOMENTOS</p><h2>Pequeños recuerdos que nos trajeron hasta aquí.</h2><p class="muted">Estas imágenes pueden cambiarse desde el panel de administración.</p></div>
-      <div class="gallery" aria-label="Galería de fotos"><button class="gallery-card gallery-large" type="button" data-gallery-index="0" aria-label="Abrir foto 1"><span>Un momento para recordar</span></button><button class="gallery-card" type="button" data-gallery-index="1" aria-label="Abrir foto 2"><span>Juntos</span></button><button class="gallery-card" type="button" data-gallery-index="2" aria-label="Abrir foto 3"><span>Nuestro día</span></button><button class="gallery-card" type="button" data-gallery-index="3" aria-label="Abrir foto 4"><span>Siempre</span></button></div>
-      <button class="continue-btn dark" type="button" data-next-page>¿Dónde nos vemos? <span>→</span></button>
-    </section>
-
-    <section id="ubicacion" class="page section sand reveal" data-page-label="Ubicación">
-      <div class="section-heading"><p class="eyebrow">NOS VEMOS AQUÍ</p><h2 id="venue-name">Lugar de la celebración</h2><p id="venue-address" class="muted"></p></div>
-      <div class="location-actions"><a id="maps-link" class="action-btn" href="#" target="_blank" rel="noopener">Abrir Google Maps</a><a id="waze-link" class="action-btn outline" href="#" target="_blank" rel="noopener">Abrir Waze</a></div>
-      <p id="parking-text" class="muted centered"></p>
-      <button class="continue-btn dark" type="button" data-next-page>Confirmar asistencia <span>→</span></button>
-    </section>
-
-    <section id="rsvp" class="page section rsvp reveal" data-page-label="RSVP">
-      <div class="rsvp-card"><p class="eyebrow">TU LUGAR ESTÁ RESERVADO</p><h2 id="rsvp-guest">Invitado</h2><p>Hemos preparado esta invitación para <strong id="total-guests">0</strong> lugares.</p>
-        <div class="rsvp-box"><p class="label">¿Cuántas personas nos acompañarán?</p><div class="counter"><button id="minus" type="button" aria-label="Restar">−</button><strong id="count">1</strong><button id="plus" type="button" aria-label="Sumar">+</button></div><button id="confirm" class="primary-btn" type="button">Sí, estaremos ahí</button><button id="decline" class="text-btn" type="button">Esta vez no podremos acompañarlos</button><p id="rsvp-message" class="rsvp-message" aria-live="polite"></p><div id="confirmed-badge" class="rsvp-confirmed-badge hidden">✓ Asistencia confirmada</div><button id="view-pass" class="primary-btn show-pass hidden" type="button">Abrir mi pase digital</button></div>
-      </div>
-    </section>
-
-    <section class="page section access reveal" data-page-label="Pase digital">
-      <p class="eyebrow">TU PASE DIGITAL</p><h2>Listo. Este es tu acceso.</h2><p class="muted">Guarda esta pantalla. Tu código y tu QR están vinculados a esta invitación y se usarán al llegar.</p><div id="code" class="access-code">BODA-XXXXXX</div><div id="qr" class="qr-box"></div><button id="view-pass-2" class="action-btn show-pass" type="button">Abrir pase a pantalla completa</button><p class="tiny">Presenta el QR o el código en la entrada.</p>
-    </section>
-
-    <section class="page section guest-photo-page reveal" data-page-label="Comparte una foto">
-      <div class="section-heading"><p class="eyebrow">UN ÚLTIMO DETALLE</p><h2>Ayúdanos a guardar este día.</h2><p class="lead compact">¿Tomaste una foto bonita durante la celebración? Súbela aquí para compartirla con nosotros. Puedes enviar hasta 2 fotos.</p></div>
-      <div class="guest-upload-card"><label class="upload-drop"><span class="upload-icon">＋</span><strong>Selecciona tus fotos</strong><small>JPG, PNG o WebP · hasta 5 MB cada una</small><input id="guest-photos" type="file" accept="image/jpeg,image/png,image/webp" multiple></label><div id="guest-preview" class="guest-preview"></div><button id="upload-guest-photos" class="primary-btn" type="button">Subir mis fotos</button><p id="guest-upload-message" class="rsvp-message" aria-live="polite"></p></div>
-    </section>
-
+    <section class="page hero" id="inicio" data-page-label="Inicio"><div class="hero-overlay"></div><div class="hero-grain"></div><div class="hero-frame"></div><div class="hero-content reveal-initial"><p class="eyebrow">UNA INVITACIÓN ESPECIAL</p><p class="guest-line">Preparada con cariño para <span id="guest-name">Invitado</span></p><h1 id="couple-names">Alejandro &amp; Sarah</h1><div class="hero-meta"><span>♡</span><span id="hero-date">26 de septiembre de 2026</span><span>♡</span></div><button class="continue-btn" type="button" data-next-page>Descubrir la invitación <span>↓</span></button></div></section>
+    <nav class="floating-nav" aria-label="Navegación de invitación"><button type="button" data-go-page="0">Inicio</button><button type="button" data-go-page="2">Historia</button><button type="button" data-go-page="3">El día</button><button type="button" data-go-page="4">Fotos</button><button type="button" data-go-page="5">Ubicación</button><button type="button" data-go-page="6">RSVP</button><button type="button" data-go-page="7">Pase</button></nav>
+    <section id="bienvenida" class="page section intro reveal" data-page-label="Bienvenida"><p class="eyebrow">QUEREMOS COMPARTIRLO CONTIGO</p><h2>Hay días que merecen celebrarse para siempre.</h2><p id="welcome-text" class="lead">Nos hace mucha ilusión que formes parte de este momento. Hemos preparado esta invitación para que descubras cada detalle de nuestro gran día.</p><div class="divider">✦</div><div id="countdown" class="countdown" hidden aria-label="Cuenta regresiva"><div><strong id="days">—</strong><span>Días</span></div><div><strong id="hours">—</strong><span>Horas</span></div><div><strong id="minutes">—</strong><span>Min</span></div><div><strong id="seconds">—</strong><span>Seg</span></div></div><button class="continue-btn dark" type="button" data-next-page>Seguir <span>→</span></button></section>
+    <section id="historia" class="page section story reveal" data-page-label="Historia"><div class="section-heading"><p class="eyebrow">NUESTRA HISTORIA</p><h2>Un capítulo nuevo está a punto de comenzar.</h2></div><div class="story-grid"><div class="story-photo photo-a" aria-hidden="true"><span>Una historia hecha de momentos</span></div><div class="story-copy"><p class="lead compact">Entre miradas, conversaciones, risas y recuerdos, llegamos hasta aquí. Ahora queremos celebrar lo que viene, rodeados de las personas que hacen especial nuestra historia.</p><div class="signature">con amor, siempre ✦</div></div></div><button class="continue-btn dark" type="button" data-next-page>Conocer el gran día <span>→</span></button></section>
+    <section id="evento" class="page section sand reveal" data-page-label="El gran día"><div class="section-heading"><p class="eyebrow">EL GRAN DÍA</p><h2>Este es el momento.</h2><p class="muted">Queremos que llegues sin prisas y vivas cada instante con nosotros.</p></div><div class="timeline"><article class="timeline-item"><span class="time" id="reception-time">3:00 PM</span><div><h3>Recepción</h3><p>Te recibiremos con alegría para comenzar juntos esta celebración.</p></div></article><article class="timeline-item"><span class="time" id="ceremony-time">4:00 PM</span><div><h3>Ceremonia</h3><p>El instante que dará inicio oficialmente a nuestro nuevo capítulo.</p></div></article></div><div class="dress-card"><p class="eyebrow">VESTIMENTA</p><strong id="dress-code">Formal / Elegante</strong><p class="muted">Queremos verte cómodo, elegante y listo para celebrar.</p></div><button class="continue-btn dark" type="button" data-next-page>Ver nuestros momentos <span>→</span></button></section>
+    <section id="fotos" class="page section reveal gallery-section" data-page-label="Fotos"><div class="section-heading"><p class="eyebrow">MOMENTOS</p><h2>Pequeños recuerdos que nos trajeron hasta aquí.</h2><p class="muted">Estas imágenes pueden cambiarse desde el panel de administración.</p></div><div class="gallery" aria-label="Galería de fotos"><button class="gallery-card gallery-large" type="button" data-gallery-index="0" aria-label="Abrir foto 1"><span>Un momento para recordar</span></button><button class="gallery-card" type="button" data-gallery-index="1" aria-label="Abrir foto 2"><span>Juntos</span></button><button class="gallery-card" type="button" data-gallery-index="2" aria-label="Abrir foto 3"><span>Nuestro día</span></button><button class="gallery-card" type="button" data-gallery-index="3" aria-label="Abrir foto 4"><span>Siempre</span></button></div><button class="continue-btn dark" type="button" data-next-page>¿Dónde nos vemos? <span>→</span></button></section>
+    <section id="ubicacion" class="page section sand reveal" data-page-label="Ubicación"><div class="section-heading"><p class="eyebrow">NOS VEMOS AQUÍ</p><h2 id="venue-name">Lugar de la celebración</h2><p id="venue-address" class="muted"></p></div><div class="location-actions"><a id="maps-link" class="action-btn" href="#" target="_blank" rel="noopener">Abrir Google Maps</a><a id="waze-link" class="action-btn outline" href="#" target="_blank" rel="noopener">Abrir Waze</a></div><p id="parking-text" class="muted centered"></p><button class="continue-btn dark" type="button" data-next-page>Confirmar asistencia <span>→</span></button></section>
+    <section id="rsvp" class="page section rsvp reveal" data-page-label="RSVP"><div class="rsvp-card"><p class="eyebrow">TU LUGAR ESTÁ RESERVADO</p><h2 id="rsvp-guest">Invitado</h2><p>Hemos preparado esta invitación para <strong id="total-guests">0</strong> lugares.</p><div class="rsvp-box"><p class="label">¿Cuántas personas nos acompañarán?</p><div class="counter"><button id="minus" type="button" aria-label="Restar">−</button><strong id="count">1</strong><button id="plus" type="button" aria-label="Sumar">+</button></div><button id="confirm" class="primary-btn" type="button">Sí, estaremos ahí</button><button id="decline" class="text-btn" type="button">Esta vez no podremos acompañarlos</button><p id="rsvp-message" class="rsvp-message" aria-live="polite"></p><div id="confirmed-badge" class="rsvp-confirmed-badge hidden">✓ Asistencia confirmada</div><button id="view-pass" class="primary-btn show-pass hidden" type="button">Abrir mi pase digital</button></div></div></section>
+    <section class="page section access reveal" data-page-label="Pase digital"><p class="eyebrow">TU PASE DIGITAL</p><h2>Listo. Este es tu acceso.</h2><p class="muted">Guarda esta pantalla. Tu código y tu QR están vinculados a esta invitación y se usarán al llegar.</p><div id="code" class="access-code">BODA-XXXXXX</div><div id="qr" class="qr-box"></div><button id="view-pass-2" class="action-btn show-pass" type="button">Abrir pase a pantalla completa</button><p class="tiny">Presenta el QR o el código en la entrada.</p></section>
+    <section class="page section guest-photo-page reveal" data-page-label="Comparte una foto"><div class="section-heading"><p class="eyebrow">UN ÚLTIMO DETALLE</p><h2>Ayúdanos a guardar este día.</h2><p class="lead compact">¿Tomaste una foto bonita durante la celebración? Súbela aquí para compartirla con nosotros. Puedes enviar hasta 2 fotos.</p></div><div class="guest-upload-card"><label class="upload-drop"><span class="upload-icon">＋</span><strong>Selecciona tus fotos</strong><small>JPG, PNG o WebP · hasta 5 MB cada una</small><input id="guest-photos" type="file" accept="image/jpeg,image/png,image/webp" multiple></label><div id="guest-preview" class="guest-preview"></div><button id="upload-guest-photos" class="primary-btn" type="button">Subir mis fotos</button><p id="guest-upload-message" class="rsvp-message" aria-live="polite"></p></div></section>
     <section class="page section final-page reveal" data-page-label="Hasta pronto"><div class="final-mark">✦</div><p class="eyebrow">GRACIAS POR SER PARTE</p><h2>Nos vemos para celebrar.</h2><p class="lead compact">Tu presencia hará que este recuerdo sea todavía más especial.</p><div class="final-couple" id="footer-couple">Alejandro &amp; Sarah</div></section>
-
     <div id="pass-modal" class="pass-modal hidden" role="dialog" aria-modal="true" aria-label="Pase de acceso"><div class="pass-wrap"><div class="pass-card"><button id="pass-close" class="pass-close" type="button" aria-label="Cerrar">×</button><p class="pass-kicker">PASE DIGITAL · BODA</p><h2 class="pass-title">Acceso confirmado</h2><p class="pass-subtitle">Presenta esta pantalla al llegar</p><div class="pass-divider"></div><h3 id="pass-name" class="pass-name">Invitado</h3><p id="pass-people" class="pass-people">0 personas confirmadas</p><div id="pass-qr" class="pass-qr"></div><p class="pass-code-label">Código de acceso</p><div id="pass-code" class="pass-code">BODA-XXXXXX</div><p class="pass-note">El personal de acceso utilizará este código para verificar y registrar tu entrada.</p><div class="pass-actions"><button id="pass-close-2" class="pass-action" type="button">Volver</button></div></div></div></div>
     <div id="lightbox" class="lightbox hidden" role="dialog" aria-modal="true" aria-label="Vista de foto"><button id="lightbox-close" class="lightbox-close" type="button" aria-label="Cerrar">×</button><div id="lightbox-art" class="lightbox-art"></div><p id="lightbox-caption"></p></div>
   </main>
