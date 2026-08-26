@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#17221d">
+  <meta name="description" content="Sistema de control de acceso para invitados de boda.">
+  <title>Control de Acceso · Boda</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="page-shell">
+    <section class="access-card" aria-labelledby="page-title">
+      <div class="ornament" aria-hidden="true">✦</div>
+      <p class="eyebrow">CONTROL DE ACCESO</p>
+      <h1 id="page-title">Una noche para recordar</h1>
+      <p class="subtitle">Verifica la invitación y registra únicamente las personas que ingresan.</p>
+
+      <form id="code-form" class="code-form" novalidate>
+        <label for="invite-code">Código de invitación</label>
+        <div class="input-row">
+          <input id="invite-code" name="invite-code" type="text" autocomplete="off" autocapitalize="characters" maxlength="20" placeholder="Ej. ALE123" aria-describedby="code-help" required>
+          <button type="submit">Verificar</button>
+        </div>
+        <p id="code-help" class="helper">El código identifica la invitación completa, no a una sola persona.</p>
+      </form>
+
+      <section id="result" class="result-panel" hidden aria-live="polite"></section>
+
+      <footer class="footer-note">
+        <span>Acceso seguro</span>
+        <span>•</span>
+        <span>Invitados en tiempo real</span>
+      </footer>
+    </section>
+  </main>
+  <script src="app.js" defer></script>
+</body>
+</html>
