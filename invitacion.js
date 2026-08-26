@@ -12,6 +12,7 @@ const setText = (selector, value) => { const el = $(selector); if (el) el.textCo
 function revealSite() {
   loading.classList.add('hidden');
   site.classList.remove('hidden');
+  requestAnimationFrame(() => document.querySelectorAll('.reveal').forEach((el) => observer.observe(el)));
 }
 
 function setLink(selector, url) {
@@ -31,12 +32,77 @@ function renderQr(value) {
   script.src = 'https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js';
   script.onload = () => {
     if (window.QRCode?.toCanvas) {
-      window.QRCode.toCanvas(canvas, value, { width: 156, margin: 1 }, (error) => {
+      window.QRCode.toCanvas(canvas, value, { width: 164, margin: 1 }, (error) => {
         if (error) target.innerHTML = '<span class="tiny">QR no disponible</span>';
       });
     } else target.innerHTML = '<span class="tiny">QR no disponible</span>';
   };
   document.head.appendChild(script);
+}
+
+function setupCountdown(rawDate) {
+  const box = $('#countdown');
+  if (!box || !rawDate) return;
+  const parsed = new Date(rawDate);
+  if (Number.isNaN(parsed.getTime())) return;
+  box.hidden = false;
+  const tick = () => {
+    const remaining = parsed.getTime() - Date.now();
+    if (remaining <= 0) {
+      ['#days','#hours','#minutes','#seconds'].forEach((s) => setText(s, '0'));
+      return;
+    }
+    const totalSeconds = Math.floor(remaining / 1000);
+    setText('#days', Math.floor(totalSeconds / 86400));
+    setText('#hours', Math.floor((totalSeconds % 86400) / 3600));
+    setText('#minutes', Math.floor((totalSeconds % 3600) / 60));
+    setText('#seconds', totalSeconds % 60);
+  };
+  tick();
+  setInterval(tick, 1000);
+}
+
+function setupGallery() {
+  const cards = [...document.querySelectorAll('.gallery-card')];
+  const lightbox = $('#lightbox');
+  const art = $('#lightbox-art');
+  const caption = $('#lightbox-caption');
+  const close = $('#lightbox-close');
+  if (!cards.length || !lightbox || !art || !caption || !close) return;
+
+  const demoArt = [
+    'linear-gradient(145deg,#5f6d64,#cbbda5)',
+    'linear-gradient(145deg,#e1d8c9,#8c806b)',
+    'linear-gradient(145deg,#768175,#c9b896)',
+    'linear-gradient(145deg,#d5c8b0,#516159)'
+  ];
+  const captions = ['Un momento para recordar','Juntos','Nuestro día','Siempre'];
+  const open = (index) => {
+    art.style.backgroundImage = demoArt[index] || demoArt[0];
+    caption.textContent = captions[index] || 'Un momento especial';
+    lightbox.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  };
+  const shut = () => { lightbox.classList.add('hidden'); document.body.style.overflow = ''; };
+  cards.forEach((card) => card.addEventListener('click', () => open(Number(card.dataset.galleryIndex || 0))));
+  close.addEventListener('click', shut);
+  lightbox.addEventListener('click', (event) => { if (event.target === lightbox) shut(); });
+  document.addEventListener('keydown', (event) => { if (event.key === 'Escape') shut(); });
+}
+
+function celebrate() {
+  const burst = document.createElement('div');
+  burst.className = 'celebration';
+  for (let i = 0; i < 18; i += 1) {
+    const piece = document.createElement('span');
+    piece.textContent = i % 2 ? '✦' : '·';
+    piece.style.setProperty('--x', `${(Math.random() - .5) * 280}px`);
+    piece.style.setProperty('--y', `${-80 - Math.random() * 180}px`);
+    piece.style.setProperty('--r', `${(Math.random() - .5) * 240}deg`);
+    burst.appendChild(piece);
+  }
+  document.body.appendChild(burst);
+  setTimeout(() => burst.remove(), 1100);
 }
 
 async function updateRsvp(messageElement, count, status) {
@@ -56,6 +122,15 @@ async function updateRsvp(messageElement, count, status) {
     : 'Hemos registrado que no podrás acompañarnos.';
   return true;
 }
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('is-visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: .12 });
 
 async function init() {
   if (!code) {
@@ -82,10 +157,13 @@ async function init() {
   setText('#venue-name', invite.venue_name);
   setText('#venue-address', invite.venue_address);
   setText('#parking-text', invite.parking_text);
+  setText('#faq-parking', invite.parking_text);
   setText('#dress-code', invite.dress_code);
+  setText('#dress-code-alt', invite.dress_code);
   setText('#gift-text', invite.gift_text);
   setText('#total-guests', invite.total_guests);
   setText('#code', invite.code);
+  setText('#faq-children', invite.allow_children ? 'Sí. Esta invitación permite niños.' : 'Esta invitación está configurada sin niños.');
 
   setLink('#maps-link', invite.maps_url);
   setLink('#waze-link', invite.waze_url);
@@ -96,7 +174,10 @@ async function init() {
     hero.style.backgroundImage = `url("${String(invite.hero_image_url).replace(/"/g, '%22')}")`;
   }
 
-  renderQr(`${window.location.origin}${window.location.pathname.replace(/invitacion\.html$/, '')}invitacion.html?code=${encodeURIComponent(invite.code)}`);
+  // Si el administrador utiliza una fecha ISO (por ejemplo 2026-09-26T16:00:00-06:00), aparece el contador.
+  setupCountdown(invite.event_date);
+  renderQr(`${window.location.origin}${window.location.pathname}?code=${encodeURIComponent(invite.code)}`);
+  setupGallery();
 
   let count = Math.max(1, Math.min(Number(invite.confirmed_guests || 1), Number(invite.total_guests)));
   setText('#count', count);
@@ -118,12 +199,12 @@ async function init() {
     confirm.disabled = true;
     decline.disabled = true;
     const ok = await updateRsvp(message, count, 'confirmed');
-    if (ok) document.querySelector('.access').scrollIntoView({ behavior: 'smooth' });
+    if (ok) { celebrate(); document.querySelector('.access').scrollIntoView({ behavior: 'smooth' }); }
     confirm.disabled = false;
     decline.disabled = false;
   });
   decline.addEventListener('click', async () => {
-    if (!confirm('¿Seguro que deseas indicar que no podrás asistir?')) return;
+    if (!window.confirm('¿Seguro que deseas indicar que no podrás asistir?')) return;
     confirm.disabled = true;
     decline.disabled = true;
     await updateRsvp(message, 0, 'declined');
