@@ -40,9 +40,16 @@ async function loadInvitations() {
     return;
   }
 
+  let totalInvitations = data.length;
+  let totalCupos = 0;
+  let totalIngresaron = 0;
+
   body.innerHTML = data.map((inv) => {
     const used = (inv.access_entries || []).reduce((sum, entry) => sum + Number(entry.people_count || 0), 0);
     const available = Math.max(inv.total_guests - used, 0);
+    totalCupos += Number(inv.total_guests || 0);
+    totalIngresaron += used;
+
     return `<tr>
       <td><strong>${clean(inv.name)}</strong></td>
       <td><span class="pill">${clean(inv.code)}</span></td>
@@ -54,6 +61,11 @@ async function loadInvitations() {
       <td><button class="secondary-link" data-action="toggle" data-id="${inv.id}" data-active="${inv.active}" type="button">${inv.active ? 'Bloquear' : 'Activar'}</button></td>
     </tr>`;
   }).join('');
+
+  document.querySelector('#summary-invitations').textContent = totalInvitations;
+  document.querySelector('#summary-cupos').textContent = totalCupos;
+  document.querySelector('#summary-ingresaron').textContent = totalIngresaron;
+  document.querySelector('#summary-disponibles').textContent = Math.max(totalCupos - totalIngresaron, 0);
 
   body.querySelectorAll('[data-action="toggle"]').forEach((button) => {
     button.addEventListener('click', () => toggleInvitation(button.dataset.id, button.dataset.active === 'true'));
